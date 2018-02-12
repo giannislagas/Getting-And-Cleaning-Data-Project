@@ -7,7 +7,7 @@ The project was to download the data set available [here](https://d396qusza40orc
 Files in the Repo:
 1. README.md
 2. Codebook.md: Contains a description of all the variables, the data and the transformations performed.
-3. run_analysis.R: This is the script file used to create the two data sets.
+3. run_analysis.R: This is the script file used to create the final tidy data sets.
 
 Here's a guide to how my script works:
 1. The dplyr package is loaded using the library(dplyr)  command.
