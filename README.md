@@ -8,3 +8,4 @@ Files in the Repo:
 1. README.md
 2. Codebook.md: Contains a description of all the variables and the data, as well as the transformations performed.
 3. run_analysis.R: This is the script file used to create the final tidy data sets.
+4. final.txt: The final tidy data set run_analysis.R produces.
