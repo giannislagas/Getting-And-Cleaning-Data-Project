@@ -18,6 +18,7 @@ The output file final.txt contains variables in columns. Variable names are all 
 Thus, for example time_body_acceleration_mean_x would refer to the average x-coordinate of the measurement of the Body Acceleration component of the accelerometer for each individual/activity pair.
 
 In addition, there are two other variables:
+
 10. subject_id: a unique id referring to each individual in the experiment. Range is 1-30.
 11. activity_name: The activity the subject was performing when measurements were taken (walking, walking upstairs, walking downstairs, sitting, standing, laying)
 
