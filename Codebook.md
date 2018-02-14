@@ -1,0 +1,31 @@
+#CODEBOOK
+
+The original data sets can be found [here](https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip).
+
+From the description in the README.md file in that directory: The experiments have been carried out with a group of 30 volunteers within an age bracket of 19-48 years. Each person performed six activities (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING) wearing a smartphone (Samsung Galaxy S II) on the waist. Using its embedded accelerometer and gyroscope, we captured 3-axial linear acceleration and 3-axial angular velocity at a constant rate of 50Hz. The experiments have been video-recorded to label the data manually. The obtained dataset has been randomly partitioned into two sets, where 70% of the volunteers was selected for generating the training data and 30% the test data. 
+
+The sensor signals (accelerometer and gyroscope) were pre-processed by applying noise filters and then sampled in fixed-width sliding windows of 2.56 sec and 50% overlap (128 readings/window). The sensor acceleration signal, which has gravitational and body motion components, was separated using a Butterworth low-pass filter into body acceleration and gravity. The gravitational force is assumed to have only low frequency components, therefore a filter with 0.3 Hz cutoff frequency was used. From each window, a vector of features was obtained by calculating variables from the time and frequency domain.
+
+The output file final.txt contains variables in columns. Variable names are all lower case and separated by a "_" in lieu of space. The names are concatenations of the following words:
+1. A prefix of time refers to time domain. A prefix of frequency refers to frequency domain. Frequency domain measurements are obtained from the corresponding time domain frequencies via a Fast Fourrier Transform.
+2. body_acceleration refers to the body acceleration component of the accelaration signal. gravity_acceleration refers to the gravity acceleration component of the accelaration signal, and angular_velocity refers to the angular velocity measured from the gyroscope signal.
+3. jerk (optional) if present in the name it indicates the jerk signal obtained by deriving with respect to time.
+4. mag refers to magnitude. Euclidean distance was used.
+5. mean: refers to the average of all measurements for the activity/individual pair that corresponds to that row.
+6. std: refers to the average over all windows of the standard deviation over measurements for each reading in the window for the activity/individual pair that corresponds to that row.
+7. (Optional)A suffix of x,y,z refers to the x,y or z-component of the corresponding measurement (for vector measurements only; doesn't apply to mag).
+
+Thus, for example time_body_acceleration_mean_x would refer to the average x-coordinate of the measurement of the Body Acceleration component of the accelerometer for each individual/activity pair.
+
+In addition, there are two other variables:
+10. subject_id: a unique id referring to each individual in the experiment. Range is 1-30.
+11. activity_name: The activity the subject was performing when measurements were taken (walking, walking upstairs, walking downstairs, sitting, standing, laying)
+
+To obtain the final.txt data set the following tasks were performed by the run_analysis script:
+1. A temporary file was created to store the zip file containing the original data set. From there the data needed for or analysis was loaded into data frames X_train, X_test, y_train, y_test, subject_train, subject_test, features, activity_labels. The rows in the first two represent measurements taken across different windows (for training/test data respectively), with those measurements stored across the different column variables. The activity ids for each row are stored in the third and fourth data frames (for training/test data respectively), while the fifth and sixth contain the subject id for each row (for training/test data respectively). Finaly features contains a column of indices and a column of feature names, and activity labels a column of activity indices and a column of corresponding activity labels. After reading in the necessary variables, all the connections are closed.
+2. As a first transformation, X_train, y_train and subject_train were column binded, so that the resulting data frame had first row subject ids, second was activity labels and the rest was just as X_train. The result was a new data frame train. A data frame test was produced the exact same way. Then, the two were column binded so that train data came before test data, in a data frame total.
+3. The next step was discarding the index row of the features data frame, so that features is only a vector of feature names. The next step was naming the first two columns of total appropriately (subject_id and activity_name respectively). At this stage activity_name actually contains only activity_id but that will be fixed in the next step! After that, we also renamed the rest of total according to the features vector. Then, grepl was used to select only the columns were mean() or std() appeared, as we only cared for mean or standard deviations of each measurements, and the other columns (apart from subject/activity) were discarded.
+3. Subsequently, activity codes were replaced by their proper names. For this, the activity_labels.txt files of the original zip above was read into a data frame in R with codes in first column and names in the second. We then picked the names for activity_name column of by picking only the second column in activity_labels indexed by activity_name, and updated activity_name to this new result using mutate.
+4. Next, we cleaned up variable names: converted everything to lower letters, removed parentheses, converted - to _, removed double _ where they appeared, expanded the domain codes (t,f) to (time, frequency) respectively, renamed BodyGyro to angular_velocity (more descriptive), expanded acc to acceleration so that it's more clear what is meant, and put a _ between jerk and mag. It turns out a few variables contained body two times so we removed that too.
+5. Finally, to obtain the desired tidy data set, we grouped our data set by subject first then activity and we applied mean to each column of the grouped data frame using summarize all.
+
